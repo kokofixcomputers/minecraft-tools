@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Minecraft 1.21+ /give Command Generator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Minecraft 1.21+ /give Command Generator</h1>
+    <label for="itemInput">Item Name</label>
+    <div style="position:relative;">
+      <input type="text" id="itemInput" placeholder="e.g. diamond_sword" autocomplete="off" spellcheck="false" />
+      <div id="itemAutocomplete" class="autocomplete-list" style="display:none;"></div>
+    </div>
+
+    <div class="nbt-section">
+      <div class="nbt-row">
+        <span class="nbt-label">Name:</span>
+        <input type="text" id="nbtName" placeholder="Custom Name (optional)" maxlength="50" />
+      </div> 
+      <div class="nbt-row">
+        <span class="nbt-label">Color:</span>
+        <select id="nbtColor" class="nbt-color">
+          <option value="">Default</option>
+          <option value="black">Black</option>
+          <option value="dark_blue">Dark Blue</option>
+          <option value="dark_green">Dark Green</option>
+          <option value="dark_aqua">Dark Aqua</option>
+          <option value="dark_red">Dark Red</option>
+          <option value="dark_purple">Dark Purple</option>
+          <option value="gold">Gold</option>
+          <option value="gray">Gray</option>
+          <option value="dark_gray">Dark Gray</option>
+          <option value="blue">Blue</option>
+          <option value="green">Green</option>
+          <option value="aqua">Aqua</option>
+          <option value="red">Red</option>
+          <option value="light_purple">Light Purple</option>
+          <option value="yellow">Yellow</option>
+          <option value="white">White</option>
+        </select>
+      </div>
+      <div class="nbt-row">
+  <span class="nbt-label">Lore:</span>
+  <textarea id="nbtLore" placeholder="One lore line per row" rows="3"></textarea>
+</div>
+
+      <div class="nbt-row">
+        <span class="nbt-label">Format:</span>
+        <button class="nbt-format-btn" id="nbtBold" title="Bold">B</button>
+        <button class="nbt-format-btn" id="nbtItalic" title="Italic"><i>I</i></button>
+        <button class="nbt-format-btn" id="nbtUnder" title="Underline" style="text-decoration: underline;">U</button>
+        <button class="nbt-format-btn" id="nbtStrike" title="Strikethrough" style="text-decoration: line-through;">S</button>
+        <button class="nbt-format-btn" id="nbtObfus" title="Obfuscated" style="font-family: monospace;">?</button>
+      </div>
+    </div>
+
+    <div class="enchantments-list" id="enchantmentsList"></div>
+    <button class="add-btn" id="addEnchantmentBtn"><span>+</span> Add Enchantment</button>
+
+    <div class="attributes-list" id="attributesList"></div>
+    <button class="add-btn" id="addAttributeBtn"><span>+</span> Add Attribute</button>
+
+    <div class="error-message" id="errorMessage"></div>
+    <div>
+      <label for="commandOutput">Generated Command</label>
+      <div class="command-output" id="commandOutput" readonly></div>
+    </div>
+    <div class="footer">
+      <span style="color: #6ee7b7;">Tip:</span> Minecraft 1.21+ only! Copy and paste into chat or command block.
+    </div>
+  </div>
+
+  <!-- Link to your JavaScript file here -->
+  <script src="main.js"></script>
+</body>
+</html>
