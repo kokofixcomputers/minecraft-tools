@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Minecraft 1.21+ Custom Potion Generator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Minecraft 1.21+ Custom Potion Generator</h1>
+    <div class="nbt-section">
+      <div class="nbt-row">
+        <span class="nbt-label">Potion Type:</span>
+        <select id="potionType" style="flex:2 1 180px;background:#2d2d2d;color:#a7ffeb;border:1px solid #374151;border-radius:5px;padding:0.3em 0.7em;font-size:1em;">
+          <option value="potion">Potion</option>
+          <option value="splash_potion">Splash Potion</option>
+          <option value="lingering_potion">Lingering Potion</option>
+          <option value="tipped_arrow">Tipped Arrow</option>
+        </select>
+      </div>
+      <div class="nbt-row">
+        <span class="nbt-label">Custom Effects:</span>
+        <button class="add-btn" id="addEffectBtn"><span>+</span> Add Effect</button>
+      </div>
+      <div class="effects-list" id="effectsList"></div>
+      <div class="nbt-row">
+        <span class="nbt-label">Color:</span>
+        <input type="color" id="potionColor" value="#b84fff" style="width:2.2em; height:2.2em; background:none;">
+        <input type="text" id="potionColorHex" placeholder="Hex (optional)" maxlength="8" style="width:120px;" />
+      </div>
+      <div class="nbt-row">
+        <span class="nbt-label">Count:</span>
+        <input type="number" id="count" min="1" max="64" value="1" style="max-width:80px;" />
+      </div>
+    </div>
+    <div class="error-message" id="errorMessage"></div>
+    <div>
+      <label for="commandOutput">Generated Command</label>
+      <div class="command-output" id="commandOutput" readonly></div>
+    </div>
+    <div class="footer">
+      <span style="color: #6ee7b7;">Tip:</span> Minecraft 1.21+ only! Paste into chat or a command block.
+    </div>
+  </div>
+  <script src="potiongen.js"></script>
+</body>
+</html>
