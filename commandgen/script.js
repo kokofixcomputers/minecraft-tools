@@ -45,6 +45,8 @@ const addAttributeBtn = document.getElementById('addAttributeBtn');
 // NBT Elements
 const nbtName = document.getElementById('nbtName');
 const nbtColor = document.getElementById('nbtColor');
+const nbtColorPicker = document.getElementById('nbtColorPicker');
+const nbtColorHex = document.getElementById('nbtColorHex');
 const nbtBold = document.getElementById('nbtBold');
 const nbtItalic = document.getElementById('nbtItalic');
 const nbtUnder = document.getElementById('nbtUnder');
@@ -275,19 +277,46 @@ function setupNBTFormatBtns() {
   nbtObfus.onclick = () => { nbtFormat.obfuscated = !nbtFormat.obfuscated; updateNBTFormatBtn(nbtObfus, 'obfuscated'); updateCommand(); }
 }
 
+// === COLOR PICKER LOGIC ===
+nbtColor.addEventListener('change', () => {
+  if (nbtColor.value === "custom") {
+    nbtColorPicker.style.display = "";
+    nbtColorHex.style.display = "";
+    if (!nbtColorHex.value) nbtColorHex.value = "#ffffff";
+    nbtColorPicker.value = nbtColorHex.value.startsWith("#") ? nbtColorHex.value : ("#" + nbtColorHex.value);
+  } else {
+    nbtColorPicker.style.display = "none";
+    nbtColorHex.style.display = "none";
+  }
+  updateCommand();
+});
+nbtColorPicker.addEventListener('input', () => {
+  nbtColorHex.value = nbtColorPicker.value;
+  updateCommand();
+});
+nbtColorHex.addEventListener('input', () => {
+  let v = nbtColorHex.value.trim();
+  if (v && !v.startsWith("#")) v = "#" + v;
+  nbtColorPicker.value = v;
+  updateCommand();
+});
+
 // === Custom Name as JSON Array String, with Italics Handling ===
 function buildCustomNameComponent() {
   const name = nbtName.value;
-  const color = nbtColor.value;
+  let color = nbtColor.value;
+  if (color === "custom") {
+    color = nbtColorHex.value.trim();
+    if (color && color.startsWith("#")) color = color;
+    else color = "";
+  }
   if (!name) return null;
   let obj = { text: name };
   if (color) obj.color = color;
-  // Always set italic (true/false) explicitly
   obj.italic = !!nbtFormat.italic;
   for (const key in nbtFormat) {
     if (key !== "italic" && nbtFormat[key]) obj[key] = true;
   }
-  // The custom_name must be a JSON array string, starting with an empty string as first element.
   return `[\"\",${JSON.stringify(obj)}]`;
 }
 
@@ -295,11 +324,14 @@ function buildCustomNameComponent() {
 function buildLoreComponent() {
   const loreRaw = nbtLore.value;
   if (!loreRaw) return null;
-  const color = nbtColor.value;
+  let color = nbtColor.value;
+  if (color === "custom") {
+    color = nbtColorHex.value.trim();
+    if (color && color.startsWith("#")) color = color;
+    else color = "";
+  }
   const loreLines = loreRaw.split('\n').filter(line => line.trim().length > 0);
   if (loreLines.length === 0) return null;
-
-  // Each line is a stringified JSON array, wrapped in single quotes
   return '[' + loreLines.map(line => {
     let obj = { text: line };
     if (color) obj.color = color;
@@ -307,13 +339,9 @@ function buildLoreComponent() {
     for (const key in nbtFormat) {
       if (key !== "italic" && nbtFormat[key]) obj[key] = true;
     }
-    // Wrap each stringified array in single quotes
     return `'${JSON.stringify(["", obj])}'`;
   }).join(',') + ']';
 }
-
-
-
 
 function buildEnchantmentsComponent() {
   if (enchantments.length === 0) return null;
@@ -459,7 +487,6 @@ addAttributeBtn.addEventListener('click', () => {
 
 // NBT Listeners
 nbtName.addEventListener('input', updateCommand);
-nbtColor.addEventListener('change', updateCommand);
 nbtLore.addEventListener('input', updateCommand);
 
 setupNBTFormatBtns();
