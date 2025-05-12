@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Minecraft 1.21+ /summon Mob Generator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Minecraft 1.21+ /summon Mob Generator</h1>
+    <label for="mobType">Mob Type</label>
+    <div style="position:relative;">
+      <input type="text" id="mobType" placeholder="e.g. zombie" autocomplete="off" spellcheck="false" />
+      <div id="mobTypeAutocomplete" class="autocomplete-list" style="display:none;"></div>
+    </div>
+
+    <div class="nbt-section">
+      <div class="nbt-row">
+        <span class="nbt-label">Custom Name:</span>
+        <input type="text" id="mobName" placeholder="Mob Name (optional)" maxlength="50" />
+        <input type="color" id="mobNameColor" value="#ffffff" title="Name color" style="width:2.2em; height:2.2em; background:none;">
+        <button class="nbt-format-btn" id="mobNameBold" title="Bold">B</button>
+        <button class="nbt-format-btn" id="mobNameItalic" title="Italic"><i>I</i></button>
+        <button class="nbt-format-btn" id="mobNameUnder" title="Underline" style="text-decoration: underline;">U</button>
+        <button class="nbt-format-btn" id="mobNameStrike" title="Strikethrough" style="text-decoration: line-through;">S</button>
+        <button class="nbt-format-btn" id="mobNameObfus" title="Obfuscated" style="font-family: monospace;">?</button>
+      </div>
+      <div class="nbt-row">
+        <span class="nbt-label">Equipment:</span>
+        <input type="text" id="mainHand" placeholder="Main hand (e.g. diamond_sword)" />
+        <input type="text" id="offHand" placeholder="Offhand (e.g. shield)" />
+        <input type="text" id="helmet" placeholder="Helmet" />
+        <input type="text" id="chestplate" placeholder="Chestplate" />
+        <input type="text" id="leggings" placeholder="Leggings" />
+        <input type="text" id="boots" placeholder="Boots" />
+      </div>
+      <div class="nbt-row">
+        <span class="nbt-label">Attributes:</span>
+        <button class="add-btn" id="addAttributeBtn"><span>+</span> Add Attribute</button>
+      </div>
+      <div class="attributes-list" id="attributesList"></div>
+      <div class="nbt-row">
+        <span class="nbt-label">Effects:</span>
+        <button class="add-btn" id="addEffectBtn"><span>+</span> Add Effect</button>
+      </div>
+      <div class="effects-list" id="effectsList"></div>
+      <div class="nbt-row">
+        <span class="nbt-label">Passenger:</span>
+        <input type="text" id="passengerType" placeholder="Passenger mob (optional)" />
+      </div>
+      <div class="nbt-row">
+        <span class="nbt-label">Other:</span>
+        <label class="nbt-checkbox-label">
+          <input type="checkbox" id="noAI" class="nbt-checkbox" /> No AI
+        </label>
+        <label class="nbt-checkbox-label">
+          <input type="checkbox" id="invulnerable" class="nbt-checkbox" /> Invulnerable
+        </label>
+        <label class="nbt-checkbox-label">
+          <input type="checkbox" id="silent" class="nbt-checkbox" /> Silent
+        </label>
+        <label class="nbt-checkbox-label">
+          <input type="checkbox" id="persistent" class="nbt-checkbox" /> Persistent
+        </label>
+      </div>
+    </div>
+
+    <div class="error-message" id="errorMessage"></div>
+    <div>
+      <label for="commandOutput">Generated Command</label>
+      <div class="command-output" id="commandOutput" readonly></div>
+    </div>
+    <div class="footer">
+      <span style="color: #6ee7b7;">Tip:</span> Minecraft 1.21+ only! Paste into chat or a command block.
+    </div>
+  </div>
+  <script src="summongen.js"></script>
+</body>
+</html>
