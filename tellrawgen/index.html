@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Minecraft 1.21+ /tellraw Command Generator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Minecraft 1.21+ <code>/tellraw</code> Command Generator</h1>
+    <div id="messagesList"></div>
+    <button class="add-btn" id="addMsgBtn"><span>+</span> Add Message Part</button>
+    <div class="error-message" id="errorMessage"></div>
+    <div>
+      <label for="commandOutput">Generated Command</label>
+      <div class="command-output" id="commandOutput" readonly></div>
+    </div>
+    <div style="margin-top:1em;">
+      <label>Preview</label>
+      <div class="command-output" id="preview" style="background:#18181b; color:#fff; min-height:2em; text-align:left;"></div>
+    </div>
+    <div class="footer">
+      <span style="color: #6ee7b7;">Tip:</span> Minecraft 1.21+ only! Supports all formatting, color names, and hex colors.
+    </div>
+  </div>
+  <script src="tellrawgen.js"></script>
+</body>
+</html>
