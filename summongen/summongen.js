@@ -49,16 +49,24 @@ const attributesList = document.getElementById('attributesList');
 const addEffectBtn = document.getElementById('addEffectBtn');
 const effectsList = document.getElementById('effectsList');
 const passengerType = document.getElementById('passengerType');
+const passengerBaby = document.getElementById('passengerBaby');
+const addPassengerAttributeBtn = document.getElementById('addPassengerAttributeBtn');
+const passengerAttributesList = document.getElementById('passengerAttributesList');
+const addPassengerEffectBtn = document.getElementById('addPassengerEffectBtn');
+const passengerEffectsList = document.getElementById('passengerEffectsList');
 const noAI = document.getElementById('noAI');
 const invulnerable = document.getElementById('invulnerable');
 const silent = document.getElementById('silent');
 const persistent = document.getElementById('persistent');
+const isBaby = document.getElementById('isBaby');
 const errorMessage = document.getElementById('errorMessage');
 const commandOutput = document.getElementById('commandOutput');
 
 // === STATE ===
 let attributes = [];
 let effects = [];
+let passengerAttributes = [];
+let passengerEffects = [];
 let mobNameFormat = {bold:false,italic:false,underlined:false,strikethrough:false,obfuscated:false};
 
 // === AUTOCOMPLETE ===
@@ -132,9 +140,9 @@ function setupNameFormatBtns() {
 setupNameFormatBtns();
 
 // === ATTRIBUTE HANDLING ===
-function renderAttributes() {
-  attributesList.innerHTML = '';
-  attributes.forEach((attr, idx) => {
+function createAttributeRow(attrArray, container, updateCallback) {
+  container.innerHTML = '';
+  attrArray.forEach((attr, idx) => {
     const row = document.createElement('div');
     row.className = 'attribute-row';
 
@@ -148,8 +156,8 @@ function renderAttributes() {
     });
     attrSelect.value = attr.type || ATTRIBUTES[0].id;
     attrSelect.onchange = (e) => {
-      attributes[idx].type = e.target.value;
-      updateCommand();
+      attrArray[idx].type = e.target.value;
+      updateCallback();
     };
 
     // Amount input
@@ -158,8 +166,8 @@ function renderAttributes() {
     amountInput.placeholder = 'Value';
     amountInput.value = attr.amount || '';
     amountInput.oninput = (e) => {
-      attributes[idx].amount = e.target.value;
-      updateCommand();
+      attrArray[idx].amount = e.target.value;
+      updateCallback();
     };
 
     // Operation select
@@ -172,17 +180,17 @@ function renderAttributes() {
     });
     opSelect.value = attr.operation || 0;
     opSelect.onchange = (e) => {
-      attributes[idx].operation = Number(e.target.value);
-      updateCommand();
+      attrArray[idx].operation = Number(e.target.value);
+      updateCallback();
     };
 
     const delBtn = document.createElement('button');
     delBtn.className = 'delete-btn';
     delBtn.innerHTML = '✕';
     delBtn.onclick = () => {
-      attributes.splice(idx, 1);
-      renderAttributes();
-      updateCommand();
+      attrArray.splice(idx, 1);
+      createAttributeRow(attrArray, container, updateCallback);
+      updateCallback();
     };
 
     row.appendChild(attrSelect);
@@ -190,21 +198,31 @@ function renderAttributes() {
     row.appendChild(opSelect);
     row.appendChild(delBtn);
 
-    attributesList.appendChild(row);
+    container.appendChild(row);
   });
+}
+function renderAttributes() {
+  createAttributeRow(attributes, attributesList, updateCommand);
+}
+function renderPassengerAttributes() {
+  createAttributeRow(passengerAttributes, passengerAttributesList, updateCommand);
 }
 addAttributeBtn.addEventListener('click', () => {
   attributes.push({ type: ATTRIBUTES[0].id, amount: '', operation: 0 });
   renderAttributes();
   updateCommand();
 });
+addPassengerAttributeBtn.addEventListener('click', () => {
+  passengerAttributes.push({ type: ATTRIBUTES[0].id, amount: '', operation: 0 });
+  renderPassengerAttributes();
+  updateCommand();
+});
 
 // === EFFECT HANDLING ===
-function renderEffects() {
-  effectsList.innerHTML = '';
-  // Sort effects alphabetically by type for neatness
-  effects.sort((a, b) => (a.type || '').localeCompare(b.type || ''));
-  effects.forEach((eff, idx) => {
+function createEffectRow(effArray, container, updateCallback) {
+  container.innerHTML = '';
+  effArray.sort((a, b) => (a.type || '').localeCompare(b.type || ''));
+  effArray.forEach((eff, idx) => {
     const row = document.createElement('div');
     row.className = 'attribute-row';
 
@@ -218,8 +236,8 @@ function renderEffects() {
     });
     effSelect.value = eff.type || EFFECTS[0];
     effSelect.onchange = (e) => {
-      effects[idx].type = e.target.value;
-      updateCommand();
+      effArray[idx].type = e.target.value;
+      updateCallback();
     };
 
     // Amplifier
@@ -229,8 +247,8 @@ function renderEffects() {
     ampInput.min = 0;
     ampInput.value = eff.amp || 0;
     ampInput.oninput = (e) => {
-      effects[idx].amp = e.target.value;
-      updateCommand();
+      effArray[idx].amp = e.target.value;
+      updateCallback();
     };
 
     // Duration
@@ -240,11 +258,11 @@ function renderEffects() {
     durInput.min = 1;
     durInput.value = eff.dur || 600;
     durInput.oninput = (e) => {
-      effects[idx].dur = e.target.value;
-      updateCommand();
+      effArray[idx].dur = e.target.value;
+      updateCallback();
     };
 
-    // Modern Hide particles checkbox
+    // Hide particles checkbox
     const hidePart = document.createElement('label');
     hidePart.className = 'nbt-checkbox-label';
     hidePart.style.marginLeft = '0.3em';
@@ -253,8 +271,8 @@ function renderEffects() {
     hideChk.className = 'nbt-checkbox';
     hideChk.checked = !!eff.hide;
     hideChk.onchange = (e) => {
-      effects[idx].hide = e.target.checked;
-      updateCommand();
+      effArray[idx].hide = e.target.checked;
+      updateCallback();
     };
     hidePart.appendChild(hideChk);
     hidePart.appendChild(document.createTextNode('Hide'));
@@ -264,9 +282,9 @@ function renderEffects() {
     delBtn.className = 'delete-btn';
     delBtn.innerHTML = '✕';
     delBtn.onclick = () => {
-      effects.splice(idx, 1);
-      renderEffects();
-      updateCommand();
+      effArray.splice(idx, 1);
+      createEffectRow(effArray, container, updateCallback);
+      updateCallback();
     };
 
     row.appendChild(effSelect);
@@ -275,13 +293,23 @@ function renderEffects() {
     row.appendChild(hidePart);
     row.appendChild(delBtn);
 
-    effectsList.appendChild(row);
+    container.appendChild(row);
   });
 }
-
+function renderEffects() {
+  createEffectRow(effects, effectsList, updateCommand);
+}
+function renderPassengerEffects() {
+  createEffectRow(passengerEffects, passengerEffectsList, updateCommand);
+}
 addEffectBtn.addEventListener('click', () => {
   effects.push({ type: EFFECTS[0], amp: 0, dur: 600, hide: false });
   renderEffects();
+  updateCommand();
+});
+addPassengerEffectBtn.addEventListener('click', () => {
+  passengerEffects.push({ type: EFFECTS[0], amp: 0, dur: 600, hide: false });
+  renderPassengerEffects();
   updateCommand();
 });
 
@@ -309,27 +337,26 @@ function buildEquipmentComponent() {
   const armor = [boots.value, leggings.value, chestplate.value, helmet.value].map(itemObj);
   return {hand, armor};
 }
-function buildAttributesComponent() {
-  if (attributes.length === 0) return null;
-  let arr = [];
-  attributes.forEach(a => {
+function buildAttributesComponentFor(arr) {
+  if (arr.length === 0) return null;
+  let out = [];
+  arr.forEach(a => {
     if (a.type && a.amount !== '' && !isNaN(a.amount)) {
-      arr.push({
+      out.push({
         Name: a.type,
         Base: Number(a.amount),
         Operation: Number(a.operation)
       });
     }
   });
-  if (arr.length === 0) return null;
-  return arr;
+  return out.length ? out : null;
 }
-function buildEffectsComponent() {
-  if (effects.length === 0) return null;
-  let arr = [];
-  effects.forEach(e => {
+function buildEffectsComponentFor(arr) {
+  if (arr.length === 0) return null;
+  let out = [];
+  arr.forEach(e => {
     if (e.type && e.dur && !isNaN(e.dur)) {
-      arr.push({
+      out.push({
         Id: effectNameToId(e.type),
         Amplifier: Number(e.amp) || 0,
         Duration: Number(e.dur) || 600,
@@ -337,12 +364,9 @@ function buildEffectsComponent() {
       });
     }
   });
-  if (arr.length === 0) return null;
-  return arr;
+  return out.length ? out : null;
 }
 function effectNameToId(name) {
-  // 1.21+ uses string IDs, but NBT still uses numeric IDs for effects
-  // We'll use a lookup for common effects
   const map = {
     speed:1, slowness:2, haste:3, mining_fatigue:4, strength:5, instant_health:6, instant_damage:7, jump_boost:8, nausea:9,
     regeneration:10, resistance:11, fire_resistance:12, water_breathing:13, invisibility:14, blindness:15, night_vision:16,
@@ -386,21 +410,22 @@ function updateCommand() {
   const customName = buildCustomNameComponent();
   if (customName) nbt.push(`CustomName:'${customName}'`);
 
+  // Baby flag main mob
+  if (isBaby.checked) nbt.push('IsBaby:1b');
+
   // Equipment
   const eq = buildEquipmentComponent();
-  // Only include if at least one slot is filled
   if (eq.hand.some(i => Object.keys(i).length) || eq.armor.some(i => Object.keys(i).length)) {
-    // HandItems: [mainhand, offhand], ArmorItems: [boots, leggings, chestplate, helmet]
     nbt.push(`HandItems:[${JSON.stringify(eq.hand[0])},${JSON.stringify(eq.hand[1])}]`);
     nbt.push(`ArmorItems:[${JSON.stringify(eq.armor[0])},${JSON.stringify(eq.armor[1])},${JSON.stringify(eq.armor[2])},${JSON.stringify(eq.armor[3])}]`);
   }
 
   // Attributes
-  const attrComp = buildAttributesComponent();
+  const attrComp = buildAttributesComponentFor(attributes);
   if (attrComp) nbt.push(`Attributes:${JSON.stringify(attrComp)}`);
 
   // Effects
-  const effComp = buildEffectsComponent();
+  const effComp = buildEffectsComponentFor(effects);
   if (effComp) nbt.push(`ActiveEffects:${JSON.stringify(effComp)}`);
 
   // Flags
@@ -412,7 +437,14 @@ function updateCommand() {
   // Passenger
   const passenger = passengerType.value.trim();
   if (passenger) {
-    nbt.push(`Passengers:[{id:"minecraft:${passenger}"}]`);
+    let passengerNBT = [];
+    if (passengerBaby.checked) passengerNBT.push('IsBaby:1b');
+    const pAttrComp = buildAttributesComponentFor(passengerAttributes);
+    if (pAttrComp) passengerNBT.push(`Attributes:${JSON.stringify(pAttrComp)}`);
+    const pEffComp = buildEffectsComponentFor(passengerEffects);
+    if (pEffComp) passengerNBT.push(`ActiveEffects:${JSON.stringify(pEffComp)}`);
+
+    nbt.push(`Passengers:[{id:"minecraft:${passenger}"${passengerNBT.length ? ',' + passengerNBT.join(',') : ''}}]`);
   }
 
   // Compose full command
@@ -434,6 +466,8 @@ chestplate.addEventListener('input', updateCommand);
 leggings.addEventListener('input', updateCommand);
 boots.addEventListener('input', updateCommand);
 passengerType.addEventListener('input', updateCommand);
+passengerBaby.addEventListener('change', updateCommand);
+isBaby.addEventListener('change', updateCommand);
 noAI.addEventListener('change', updateCommand);
 invulnerable.addEventListener('change', updateCommand);
 silent.addEventListener('change', updateCommand);
@@ -442,4 +476,6 @@ persistent.addEventListener('change', updateCommand);
 // Initial render
 renderAttributes();
 renderEffects();
+renderPassengerAttributes();
+renderPassengerEffects();
 updateCommand();
