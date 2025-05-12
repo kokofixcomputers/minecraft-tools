@@ -22,7 +22,7 @@
       </div> 
       <div class="nbt-row">
         <span class="nbt-label">Color:</span>
-        <select id="nbtColor" class="nbt-color">
+        <select id="nbtColor" class="nbt-color" style="max-width:140px;">
           <option value="">Default</option>
           <option value="black">Black</option>
           <option value="dark_blue">Dark Blue</option>
@@ -40,8 +40,12 @@
           <option value="light_purple">Light Purple</option>
           <option value="yellow">Yellow</option>
           <option value="white">White</option>
+          <option value="custom">Custom (hex)</option>
         </select>
+        <input type="color" id="nbtColorPicker" style="width:2.2em; height:2.2em; background:none; display:none;">
+        <input type="text" id="nbtColorHex" placeholder="#hex" maxlength="7" style="width:80px; display:none;" />
       </div>
+
       <div class="nbt-row">
   <span class="nbt-label">Lore:</span>
   <textarea id="nbtLore" placeholder="One lore line per row" rows="3"></textarea>
